@@ -78,12 +78,13 @@ jobs:
         run: docker exec fastapi-tdd python -m isort . --check-only
 
   deploy:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     name: Deploy to Heroku
     runs-on: ubuntu-latest
     needs: [build, test]
     env:
       HEROKU_APP_NAME: fathomless-mesa-94695
-      HEROKU_REGISTRY_IMAGE: registry:heroku.com/${HEROKU_APP_NAME}/summarizer
+      HEROKU_REGISTRY_IMAGE: registry.heroku.com/${HEROKU_APP_NAME}/summarizer
     steps:
       - name: Checkout main
         uses: actions/checkout@v2.3.4
