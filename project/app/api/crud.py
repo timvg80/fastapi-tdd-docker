@@ -3,8 +3,12 @@
 
 from typing import List, Optional
 
-from app.models.pydantic import SummaryPayloadSchema, SummaryUpdatePayloadSchema
 from app.models.tortoise import TextSummary
+
+from app.models.pydantic import (  # isort:skip
+    SummaryPayloadSchema,
+    SummaryUpdatePayloadSchema,
+)
 
 
 async def post(payload: SummaryPayloadSchema) -> int:
