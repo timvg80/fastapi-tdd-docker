@@ -183,3 +183,29 @@ def test_update_summary_invalid_keys(test_app_with_db):
             }
         ]
     }
+
+    response = test_app_with_db.put(
+        f"/summaries/{summary_id}/",
+        data=json.dumps({"url": "invalid://url", "summary": "updated!"})
+    )
+    assert response.status_code == 422
+    assert response.json()["detail"][0]["msg"] == "URL scheme not permitted"
+
+
+def test_remove_summary_incorrect_id(test_app_with_db):
+    response = test_app_with_db.delete("/summaries/999/")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Summary not found"
+
+    response = test_app_with_db.delete("/summaries/0/")
+    assert response.status_code == 422
+    assert response.json() == {
+        "detail": [
+            {
+                "loc": ["path", "id"],
+                "msg": "ensure this value is greater than 0",
+                "type": "value_error.number.not_gt",
+                "ctx": {"limit_value": 0},
+            }
+        ]
+    }
